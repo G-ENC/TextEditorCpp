@@ -25,58 +25,57 @@ class Node{
         Node* right;
     
     Node(T value):data(value), left(nullptr), right(nullptr){}
-    Node():data(NULL), left(nullptr), right(nullptr){}
 };
 
 template <typename T>
 class BinarySearchTree{
-    public:
-        Node<T>* root;
+    private:
+        Node<T>* root = nullptr;
 
-        // Node<T>* insertValue(Node<T>* root, T key){
-        //     if(root==nullptr){
-        //         return new Node<T>(key);
-        //         cout<<"asdf";
-        //     }
-        //     if(key<=root->data){
-        //         return insertValue(root->left, key);
-        //     }else{
-        //         return insertValue(root->right, key);
-        //     }
-        // }
-
-        Node<T>* insert(Node<T>* root, T key){
-            
+        // recursivly insert nodes obeying the rules of bst
+        void insertNode(Node<T>*& root, T val){
             if(!root){
-                return new Node<T>(key);
-            }
-
-            if(root->data<=key){
-                root->right= insert(root->right, key);
+                root = new Node<T>(val);
             }else{
-                root->left= insert(root->left, key);
+                if(root->data<=val){
+                    insertNode(root->right, val);
+                }else{
+                    insertNode(root->left, val);
+                }
             }
-            
-        }
+       }
 
+        // recursivly prints binary tree inorder
         void printBinarySearchTree(Node<T>* root){
             if (root){
                 printBinarySearchTree(root->left);
-                cout<<root->data;
+                cout<<root->data<<" ";
                 printBinarySearchTree(root->right);
             }
         }
 
+        public:
+            void insert(T val){
+                insertNode(root, val);
+            }
+
+            void print(){
+                printBinarySearchTree(root);
+            }
 };
 
 int main(){
 
     BinarySearchTree<int> bst;
-    bst.insert(bst.root, 5);
-    bst.insert(bst.root, 6);
-    bst.insert(bst.root, 7);
 
-    bst.printBinarySearchTree(bst.root);
+    bst.insert(5);
+    bst.insert(6);
+    bst.insert(6);
+    bst.insert(6);
+    bst.insert(6);
+    bst.insert(3);
+
+    bst.print();
 
     return 0;
 }
