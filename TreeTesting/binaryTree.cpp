@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cassert>
+#include <algorithm>
 
 using namespace std;
 
@@ -45,12 +47,20 @@ class BinarySearchTree{
             }
        }
 
+       //print BST,
+    //    void printBST(Node<T>* root){
+    //         if(!root) return;
+            
+    //         cout<< root->data
+
+    //    }
+
         // recursivly prints binary tree inorder
-        void printBinarySearchTree(Node<T>* root){
+        void printBSTInorder(Node<T>* root){
             if (root){
-                printBinarySearchTree(root->left);
+                printBSTInorder(root->left);
                 cout<<root->data<<" ";
-                printBinarySearchTree(root->right);
+                printBSTInorder(root->right);
             }
         }
 
@@ -86,28 +96,94 @@ class BinarySearchTree{
         }
 
         Node<T>* max(Node<T>* root){
-            if(!root->left){
-                return root;
-            }else{
-                return max(root->left);
-            }
-        }
-        
-        Node<T>* min(Node<T>* root){
             if(!root->right){
                 return root;
             }else{
                 return max(root->right);
             }
         }
-        
+
+        Node<T>* min(Node<T>* root){
+            if(!root->left){
+                return root;
+            }else{
+                return min(root->left);
+            }
+        }
+
+        /*
+            predecessor gives the largest value that is smaller than the root,
+            same for successor but gives visa versa
+
+            there must exist a smaller value than root if predecessor is called,
+            same for successor but visa versa
+        */
         Node<T>* predecessor(Node<T>* root){
-            return max(root->right);
+            assert(root->left);
+            return max(root->left);
         }
 
         Node<T>* successor(Node<T>* root){
-            return min(root->left);
+            assert(root->right);
+            return min(root->right);
         }
+
+        int heightBST(Node<T>* root){
+            if(!root) return -1;
+
+            int lmax = heightBST(root->left);
+            int rmax = heightBST(root->right);
+            
+            return std::max(lmax,rmax) + 1;  
+        }
+
+        void removeNodeBST(Node<T>*& root, T val){
+            Node<T>* p = root;
+            Node<T>* q = nullptr;
+
+
+            while (p->data!=val && p != nullptr)
+            {
+                q = p;
+                if(p->data<val){
+                    p = p->right;
+                }else{
+                    p = p->left;
+                }
+            }
+
+            if(p){
+                if(p->left == nullptr && p->right == nullptr){
+                    delete p;
+                    p = nullptr;
+                    cout<<"[:]"<<p->data<<endl;
+                }else{
+                    if(p->left == nullptr){
+                        if(q->right == p){
+                            q->right = p->right;
+                        }else{
+                            q->left = p->right;
+                        }
+                        delete p;
+                        p=nullptr;
+                    }else if(p->right == nullptr){
+                        if(q->right == p){
+                            q->right = p->left;
+                        }else{
+                            q->left = p->left;
+                        }
+                        delete p;
+                        p=nullptr;
+                    }else{
+                        Node<T>* pred = predecessor(p);
+                        p->data = pred->data;
+                        removeNodeBST(pred, pred->data);
+                    }
+                }
+                
+            }
+        }
+
 
         public:
             void insert(T val){
@@ -120,13 +196,14 @@ class BinarySearchTree{
                 }
             }
 
-            void print(){
-                printBinarySearchTree(root);
+            void printInorder(){
+                printBSTInorder(root);
+                cout<<"\n";
             }
             void destroy(){
                 destroyTree(root);
             }            
-            void find(T val){
+            void check(T val){
                 cout<<val<<(searchTree(root, val) ? " is in the tree" : " not in the tree");
             }
 
@@ -138,6 +215,14 @@ class BinarySearchTree{
                 return successor(root);
             }
 
+            int getHeight(){
+                return heightBST(root);
+            }
+
+            void remove(T val){
+                removeNodeBST(root, val);
+            }
+
             ~BinarySearchTree(){
                 destroyTree(root);
             }
@@ -147,14 +232,15 @@ int main(){
 
     BinarySearchTree<int> bst;
 
-    vector<int> v = {1,2,3,4,9,7,6,5};
+    vector<int> v = {50,70,30,60,80,20,33,90,100};
 
     bst.insert(v);
 
-    bst.print();
+    bst.printInorder();
 
-    cout<<"\n"<<bst.getPredecessor()->data;
+    bst.remove(100);
 
+    bst.printInorder();
 
     return 0;
 }
