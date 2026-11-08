@@ -54,13 +54,92 @@ class BinarySearchTree{
             }
         }
 
+        /* recursive bst destroy
+        set the pointer as nullptr beacuse root 
+        is passed as refernce and no value for root 
+        results in other functions to dismiss the case where root is non-assigned
+        */
+        void destroyTree(Node<T>*& root){
+            if(root){
+                destroyTree(root->left);
+                destroyTree(root->right);
+                delete root;
+                root = nullptr;
+            }
+        }
+
+        // recursive bst search
+        bool searchTree(Node<T>* root, T val){
+           if(root){
+            if(root->data == val){
+                return true;
+            }
+            else{
+                if(root->data<val){
+                    return searchTree(root->right, val);
+                }else{
+                    return searchTree(root->left, val);
+                }
+            }
+           }
+           return false;
+        }
+
+        Node<T>* max(Node<T>* root){
+            if(!root->left){
+                return root;
+            }else{
+                return max(root->left);
+            }
+        }
+        
+        Node<T>* min(Node<T>* root){
+            if(!root->right){
+                return root;
+            }else{
+                return max(root->right);
+            }
+        }
+        
+        Node<T>* predecessor(Node<T>* root){
+            return max(root->right);
+        }
+
+        Node<T>* successor(Node<T>* root){
+            return min(root->left);
+        }
+
         public:
             void insert(T val){
                 insertNode(root, val);
             }
 
+            void insert(vector<T> val){
+                for (auto i: val){
+                    insertNode(root, i);
+                }
+            }
+
             void print(){
                 printBinarySearchTree(root);
+            }
+            void destroy(){
+                destroyTree(root);
+            }            
+            void find(T val){
+                cout<<val<<(searchTree(root, val) ? " is in the tree" : " not in the tree");
+            }
+
+            Node<T>* getPredecessor(){
+                return predecessor(root);
+            }
+
+            Node<T>* getSuccessor(){
+                return successor(root);
+            }
+
+            ~BinarySearchTree(){
+                destroyTree(root);
             }
 };
 
@@ -68,14 +147,14 @@ int main(){
 
     BinarySearchTree<int> bst;
 
-    bst.insert(5);
-    bst.insert(6);
-    bst.insert(6);
-    bst.insert(6);
-    bst.insert(6);
-    bst.insert(3);
+    vector<int> v = {1,2,3,4,9,7,6,5};
+
+    bst.insert(v);
 
     bst.print();
+
+    cout<<"\n"<<bst.getPredecessor()->data;
+
 
     return 0;
 }
