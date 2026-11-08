@@ -6,6 +6,7 @@ using namespace std;
 
 /*
 Thought:
+    --about ds
         A data structer, in its core, just a heavly restricted object
     that is defined by simple rules and/or smaller objects.
 
@@ -14,7 +15,25 @@ Thought:
     certain behaviours we can make a data structure. After making that
     data structer the APIs must provide suitable abstractions so the 
     downsides or advatages of the data structer is seperated from the 
-    users decisions.
+    user's decisions.
+
+    --about user abstraction
+        First I tried writing every function in two parts first one used the root varible
+    which I am trying to not make it explicitly mutable by the user of functions. So I opted for 
+    two function decleritaions for essentially the same function, first uses a pointer refernce 
+    and the API in public function excludes that and just passes the other varibles which are
+    passed in main. I will try to use 'this' keyword to eliviate double decleriation like this.
+*/
+
+/* --------- To Do ------------
+    to do: rewrite remove from bst function as recursion
+    to do: understand recursive implemetation of bst remove function, particularly 
+    why are we defining returning the root at the end
+    to do: rewrite all the funcitons as public but include the root by 
+        using this and delete the double function delceriation of both in public and in private
+    to do: try writing the rope after every method works
+    to do: try unit control test
+    to do: write approriate comments in functions
 */
 
 //Templete of a node for tree data structure,
