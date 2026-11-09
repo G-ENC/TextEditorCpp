@@ -29,8 +29,6 @@ Thought:
 ice tea fusetea shephthali
     to do: understand recursive implemetation of bst remove function, particularly 
             why are we defining returning the root at the end
-    to do: rewrite all the funcitons as public but include the root by 
-            using this and delete the double function delceriation of both in public and in private
     to do: try writing the rope after every method works
     to do: try unit control test
     to do: write approriate comments in functions
@@ -53,7 +51,9 @@ class BinarySearchTree{
     private:
         Node<T>* root = nullptr;
 
-        // recursivly insert nodes obeying the rules of bst
+        // recursivly insert nodes obeying the rules of bst 
+        // (every node's right child is bigger, every left child is smaller than root)
+        // I allowed for duplicates they might reside right of the root
         void insertNode(Node<T>*& root, T val){
             if(!root){
                 root = new Node<T>(val);
@@ -66,15 +66,6 @@ class BinarySearchTree{
             }
        }
 
-       //print BST,
-    //    void printBST(Node<T>* root){
-    //         if(!root) return;
-            
-    //         cout<< root->data
-
-    //    }
-
-        // recursivly prints binary tree inorder
         void printBSTInorder(Node<T>* root){
             if (root){
                 printBSTInorder(root->left);
@@ -84,9 +75,9 @@ class BinarySearchTree{
         }
 
         /* recursive bst destroy
-        set the pointer as nullptr beacuse root 
-        is passed as refernce and no value for root 
-        results in other functions to dismiss the case where root is non-assigned
+            set the pointer as nullptr beacuse root 
+            is passed as refernce and no value for root 
+            results in other functions to dismiss the case where root is non-assigned
         */
         void destroyTree(Node<T>*& root){
             if(root){
@@ -97,7 +88,6 @@ class BinarySearchTree{
             }
         }
 
-        // recursive bst search
         bool searchTree(Node<T>* root, T val){
            if(root){
             if(root->data == val){
@@ -147,6 +137,7 @@ class BinarySearchTree{
             return min(root->right);
         }
 
+        //height: number of edges on longest path 
         int heightBST(Node<T>* root){
             if(!root) return -1;
 
@@ -156,7 +147,6 @@ class BinarySearchTree{
             return std::max(lmax,rmax) + 1;  
         }
 
-        //recursivly deletes the node with passed val
         Node<T>* deleteNode(Node<T>*& root, T val){
 
             if(root==nullptr){
@@ -182,10 +172,10 @@ class BinarySearchTree{
                 //2 child case
                     Node<T>* succ = successor(root);
                     root->data = succ->data;
-                    root = deleteNode(root, succ->data);
+                    root->right = deleteNode(root->right, succ->data);
                 }
             }
-            //after the traversal we pass root, this allows back-traversal I think
+            //after the traversal we pass root, this allows back-traversal, I think
             return root;
         }
 
@@ -206,8 +196,9 @@ class BinarySearchTree{
             void destroy(){
                 destroyTree(root);
             }            
-            void check(T val){
+            bool check(T val){
                 cout<<val<<(searchTree(root, val) ? " is in the tree" : " not in the tree");
+                return searchTree(root, val);
             }
 
             Node<T>* getPredecessor(){
@@ -241,7 +232,7 @@ int main(){
 
     bst.printInorder();
 
-    bst.remove(31);
+    bst.remove(50);
 
     bst.printInorder();
 
