@@ -26,11 +26,11 @@ Thought:
 */
 
 /* --------- To Do ------------
-    to do: rewrite remove from bst function as recursion
+ice tea fusetea shephthali
     to do: understand recursive implemetation of bst remove function, particularly 
-    why are we defining returning the root at the end
+            why are we defining returning the root at the end
     to do: rewrite all the funcitons as public but include the root by 
-        using this and delete the double function delceriation of both in public and in private
+            using this and delete the double function delceriation of both in public and in private
     to do: try writing the rope after every method works
     to do: try unit control test
     to do: write approriate comments in functions
@@ -156,53 +156,38 @@ class BinarySearchTree{
             return std::max(lmax,rmax) + 1;  
         }
 
-        void removeNodeBST(Node<T>*& root, T val){
-            Node<T>* p = root;
-            Node<T>* q = nullptr;
+        //recursivly deletes the node with passed val
+        Node<T>* deleteNode(Node<T>*& root, T val){
 
-
-            while (p->data!=val && p != nullptr)
-            {
-                q = p;
-                if(p->data<val){
-                    p = p->right;
-                }else{
-                    p = p->left;
-                }
+            if(root==nullptr){
+                return root;
             }
 
-            if(p){
-                if(p->left == nullptr && p->right == nullptr){
-                    delete p;
-                    p = nullptr;
-                    cout<<"[:]"<<p->data<<endl;
+            //tree traversal using recursion
+            if(root->data<val){
+                root->right = deleteNode(root->right, val);
+            }else if(root->data>val){
+                root->left = deleteNode(root->left, val);
+            }else{
+                //1 or 0 child case
+                if(root->left == nullptr){
+                    Node<T>* temp = root->right;
+                    delete root;
+                    return temp;
+                }else if(root->right == nullptr){
+                    Node<T>* temp = root->left;
+                    delete root;
+                    return temp;
                 }else{
-                    if(p->left == nullptr){
-                        if(q->right == p){
-                            q->right = p->right;
-                        }else{
-                            q->left = p->right;
-                        }
-                        delete p;
-                        p=nullptr;
-                    }else if(p->right == nullptr){
-                        if(q->right == p){
-                            q->right = p->left;
-                        }else{
-                            q->left = p->left;
-                        }
-                        delete p;
-                        p=nullptr;
-                    }else{
-                        Node<T>* pred = predecessor(p);
-                        p->data = pred->data;
-                        removeNodeBST(pred, pred->data);
-                    }
+                //2 child case
+                    Node<T>* succ = successor(root);
+                    root->data = succ->data;
+                    root = deleteNode(root, succ->data);
                 }
-                
             }
+            //after the traversal we pass root, this allows back-traversal I think
+            return root;
         }
-
 
         public:
             void insert(T val){
@@ -214,7 +199,6 @@ class BinarySearchTree{
                     insertNode(root, i);
                 }
             }
-
             void printInorder(){
                 printBSTInorder(root);
                 cout<<"\n";
@@ -239,7 +223,7 @@ class BinarySearchTree{
             }
 
             void remove(T val){
-                removeNodeBST(root, val);
+                deleteNode(root, val);
             }
 
             ~BinarySearchTree(){
@@ -257,7 +241,7 @@ int main(){
 
     bst.printInorder();
 
-    bst.remove(100);
+    bst.remove(31);
 
     bst.printInorder();
 
