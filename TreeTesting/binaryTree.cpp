@@ -190,13 +190,13 @@ class BinarySearchTree{
                 }
             }
             void printInorder(){
-                printBSTInorder(root);
+                printBSTInorder(root);  
                 cout<<"\n";
             }
             void destroy(){
                 destroyTree(root);
             }            
-            bool check(T val){
+            bool checkValue(T val){
                 cout<<val<<(searchTree(root, val) ? " is in the tree" : " not in the tree");
                 return searchTree(root, val);
             }
