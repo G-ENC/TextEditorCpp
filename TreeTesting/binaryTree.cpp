@@ -29,9 +29,6 @@ Thought:
 ice tea fusetea shephthali
     to do: understand recursive implemetation of bst remove function, particularly 
             why are we defining returning the root at the end
-    to do: try writing the rope after every method works
-    to do: try unit control test
-    to do: write approriate comments in functions
 */
 
 //Templete of a node for tree data structure,
@@ -173,7 +170,7 @@ class BinarySearchTree{
                 }else{
                 //in 2 child case, we cange the root with its successor 
                 //and remove that succsor from the tree, essentially just 
-                //removing a node with 0 or 1 child
+                //removing a node if 0 or 1 child
                     Node<T>* succ = bstSuccessor(root);
                     root->data = succ->data;
                     root->right = bstRemoveValue(root->right, succ->data);
