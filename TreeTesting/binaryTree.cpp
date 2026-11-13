@@ -32,8 +32,6 @@ ice tea fusetea shephthali
     to do: try writing the rope after every method works
     to do: try unit control test
     to do: write approriate comments in functions
-    to do: chenge the names appropriately 
-    to do: give proper comments to interface/implamentation
 */
 
 //Templete of a node for tree data structure,
@@ -151,6 +149,7 @@ class BinarySearchTree{
         }
 
         Node<T>* bstRemoveValue(Node<T>*& root, T val){
+            //this part needs more implemetation comment
 
             if(root==nullptr){
                 return root;
@@ -172,7 +171,9 @@ class BinarySearchTree{
                     delete root;
                     return temp;
                 }else{
-                //2 child case
+                //in 2 child case, we cange the root with its successor 
+                //and remove that succsor from the tree, essentially just 
+                //removing a node with 0 or 1 child
                     Node<T>* succ = bstSuccessor(root);
                     root->data = succ->data;
                     root->right = bstRemoveValue(root->right, succ->data);
