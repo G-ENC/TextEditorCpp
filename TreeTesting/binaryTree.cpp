@@ -11,7 +11,7 @@ Thought:
     that is defined by simple rules and/or smaller objects.
 
         Nothing we do seems set in stone, not like a mathmatical notation.
-    It is loose at first and by eliminating edge cases and defining 
+    It is loose at first and by elibstMinValueating edge cases and defining 
     certain behaviours we can make a data structure. After making that
     data structer the APIs must provide suitable abstractions so the 
     downsides or advatages of the data structer is seperated from the 
@@ -32,6 +32,8 @@ ice tea fusetea shephthali
     to do: try writing the rope after every method works
     to do: try unit control test
     to do: write approriate comments in functions
+    to do: chenge the names appropriately 
+    to do: give proper comments to interface/implamentation
 */
 
 //Templete of a node for tree data structure,
@@ -42,7 +44,6 @@ class Node{
         T data;
         Node* left;
         Node* right;
-    
     Node(T value):data(value), left(nullptr), right(nullptr){}
 };
 
@@ -51,26 +52,28 @@ class BinarySearchTree{
     private:
         Node<T>* root = nullptr;
 
-        // recursivly insert nodes obeying the rules of bst 
+        // inserting nodes obeying the rules of bst 
         // (every node's right child is bigger, every left child is smaller than root)
-        // I allowed for duplicates they might reside right of the root
-        void insertNode(Node<T>*& root, T val){
+        // I allowed for duplicates they reside right of the root
+        void bstInsertValue(Node<T>*& root, T val){
+
             if(!root){
                 root = new Node<T>(val);
+            //the iteration is done by recursion
             }else{
                 if(root->data<=val){
-                    insertNode(root->right, val);
+                    bstInsertValue(root->right, val);
                 }else{
-                    insertNode(root->left, val);
+                    bstInsertValue(root->left, val);
                 }
             }
        }
 
-        void printBSTInorder(Node<T>* root){
+        void bstPrintInorder(Node<T>* root){
             if (root){
-                printBSTInorder(root->left);
+                bstPrintInorder(root->left);
                 cout<<root->data<<" ";
-                printBSTInorder(root->right);
+                bstPrintInorder(root->right);
             }
         }
 
@@ -79,75 +82,75 @@ class BinarySearchTree{
             is passed as refernce and no value for root 
             results in other functions to dismiss the case where root is non-assigned
         */
-        void destroyTree(Node<T>*& root){
+        void bstDestroyTree(Node<T>*& root){
             if(root){
-                destroyTree(root->left);
-                destroyTree(root->right);
+                bstDestroyTree(root->left);
+                bstDestroyTree(root->right);
                 delete root;
                 root = nullptr;
             }
         }
 
-        bool searchTree(Node<T>* root, T val){
+        bool bstSearchValue(Node<T>* root, T val){
            if(root){
             if(root->data == val){
                 return true;
             }
             else{
                 if(root->data<val){
-                    return searchTree(root->right, val);
+                    return bstSearchValue(root->right, val);
                 }else{
-                    return searchTree(root->left, val);
+                    return bstSearchValue(root->left, val);
                 }
             }
            }
            return false;
         }
 
-        Node<T>* max(Node<T>* root){
+        Node<T>* bstMaxValue(Node<T>* root){
             if(!root->right){
                 return root;
             }else{
-                return max(root->right);
+                return bstMaxValue(root->right);
             }
         }
 
-        Node<T>* min(Node<T>* root){
+        Node<T>* bstMinValue(Node<T>* root){
             if(!root->left){
                 return root;
             }else{
-                return min(root->left);
+                return bstMinValue(root->left);
             }
         }
 
         /*
-            predecessor gives the largest value that is smaller than the root,
+            bstPredecessor gives the largest value that is smaller than the root,
             same for successor but gives visa versa
 
-            there must exist a smaller value than root if predecessor is called,
+            there must exist a smaller value than root if bstPredecessor is called,
             same for successor but visa versa
         */
-        Node<T>* predecessor(Node<T>* root){
+        Node<T>* bstPredecessor(Node<T>* root){
             assert(root->left);
-            return max(root->left);
+            return bstMaxValue(root->left);
         }
 
-        Node<T>* successor(Node<T>* root){
+        Node<T>* bstSuccessor(Node<T>* root){
             assert(root->right);
-            return min(root->right);
+            return bstMinValue(root->right);
         }
 
         //height: number of edges on longest path 
-        int heightBST(Node<T>* root){
+        int bstHeight(Node<T>* root){
             if(!root) return -1;
 
-            int lmax = heightBST(root->left);
-            int rmax = heightBST(root->right);
+            int lbstMaxValue = bstHeight(root->left);
+            int rbstMaxValue = bstHeight(root->right);
             
             return std::max(lmax,rmax) + 1;  
         }
 
-        Node<T>* deleteNode(Node<T>*& root, T val){
+        Node<T>* bstRemoveValue(Node<T>*& root, T val){
 
             if(root==nullptr){
                 return root;
@@ -155,9 +158,9 @@ class BinarySearchTree{
 
             //tree traversal using recursion
             if(root->data<val){
-                root->right = deleteNode(root->right, val);
+                root->right = bstRemoveValue(root->right, val);
             }else if(root->data>val){
-                root->left = deleteNode(root->left, val);
+                root->left = bstRemoveValue(root->left, val);
             }else{
                 //1 or 0 child case
                 if(root->left == nullptr){
@@ -170,9 +173,9 @@ class BinarySearchTree{
                     return temp;
                 }else{
                 //2 child case
-                    Node<T>* succ = successor(root);
+                    Node<T>* succ = bstSuccessor(root);
                     root->data = succ->data;
-                    root->right = deleteNode(root->right, succ->data);
+                    root->right = bstRemoveValue(root->right, succ->data);
                 }
             }
             //after the traversal we pass root, this allows back-traversal, I think
@@ -180,29 +183,32 @@ class BinarySearchTree{
         }
 
         public:
-            void insert(T val){
-                insertNode(root, val);
+            void insertValue(T val){
+                bstInsertValue(root, val);
             }
 
-            void insert(vector<T> val){
+            void insertVector(vector<T> val){
                 for (auto i: val){
-                    insertNode(root, i);
+                    bstInsertValue(root, i);
                 }
             }
+
             void printInorder(){
-                printBSTInorder(root);  
+                bstPrintInorder(root);  
                 cout<<"\n";
             }
+
             void destroy(){
-                destroyTree(root);
+                bstDestroyTree(root);
             }            
+
             bool checkValue(T val){
-                cout<<val<<(searchTree(root, val) ? " is in the tree" : " not in the tree");
-                return searchTree(root, val);
+                cout<<val<<(bstSearchValue(root, val) ? " is in the tree" : " not in the tree");
+                return bstSearchValue(root, val);
             }
 
             Node<T>* getPredecessor(){
-                return predecessor(root);
+                return bstPredecessor(root);
             }
 
             Node<T>* getSuccessor(){
@@ -210,15 +216,15 @@ class BinarySearchTree{
             }
 
             int getHeight(){
-                return heightBST(root);
+                return bstHeight(root);
             }
 
-            void remove(T val){
-                deleteNode(root, val);
+            void removeValue(T val){
+                bstRemoveValue(root, val);
             }
 
             ~BinarySearchTree(){
-                destroyTree(root);
+                bstDestroyTree(root);
             }
 };
 
@@ -228,11 +234,11 @@ int main(){
 
     vector<int> v = {50,70,30,60,80,20,33,90,100};
 
-    bst.insert(v);
+    bst.insertVector(v);
 
     bst.printInorder();
 
-    bst.remove(50);
+    bst.removeValue(50);
 
     bst.printInorder();
 
