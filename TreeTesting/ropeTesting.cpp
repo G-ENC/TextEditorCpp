@@ -6,18 +6,16 @@ using namespace std;
 
 // Rope information: https://en.wikipedia.org/wiki/Rope_(data_structure)
 
-/*
-rope node:
-    a rope node has left and right child node,
-
-    leaf nodes:
-        hold a string and weight (length of string) attribute
-
-    nodes that aren't leaf nodes:
-        hold sum of the weights of all the leaves in its left subtree as an attribute
-        also points to left and right child which can be leaf or another tree
-*/
 class RopeNode{
+    /*  rope node:
+        a rope node has left and right child node,
+
+        leaf nodes:
+            hold a string and weight (length of string) attribute
+
+        nodes that aren't leaf nodes:
+            hold sum of the weights of all the leaves in its left subtree as an attribute
+            also points to left and right child which can be leaf or another subtree-root */   
     public:
         string childNodeString;
         int nodeWeight;
@@ -27,10 +25,10 @@ class RopeNode{
 
 class Rope{
     private:
-        RopeNode* root;
+        RopeNode* root = nullptr;
         
+        //gets all the leaves from left to right and puts them in a vector
         vector<string> collectRopeLeaf(RopeNode* root){
-
             /*
             implementation:
                 Tranverse the tree until hitting the left most leaf,
@@ -69,6 +67,20 @@ class Rope{
 
 
 };
+
+//interface: RopeNode* insertRopeString(int index, string str)
+//implementation: do one split and concat
+
+//interface: RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot)
+
+//implementation: create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot
+//                also the 
+
+//interface: RopeNode* splitRopeAtIndex(int index, RopeNode* RopeRoot)
+//implementation:
+
+//interface:
+//implementation:
 
 /*
     -------------To do----------------
