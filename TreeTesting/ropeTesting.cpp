@@ -6,6 +6,7 @@
 using namespace std;
 
 // Rope information: https://en.wikipedia.org/wiki/Rope_(data_structure)
+//                   https://medium.com/underrated-data-structures-and-algorithms/rope-data-structure-e623d7862137
 
 class RopeNode{
     /*  rope node:
