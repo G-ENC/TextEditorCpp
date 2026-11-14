@@ -28,7 +28,7 @@ class Rope{
         RopeNode* root = nullptr;
         
         //gets all the leaves from left to right and puts them in a vector
-        vector<string> collectRopeLeaf(RopeNode* root){
+        vector<RopeNode*> collectRopeLeaf(RopeNode* root){
             /*
             implementation:
                 Tranverse the tree until hitting the left most leaf,
@@ -42,7 +42,7 @@ class Rope{
             */
 
             stack<RopeNode*> ropeNodeStack;
-            vector<string> ropeStringsVector;
+            vector<RopeNode*> ropeStringsVector;
             RopeNode* currentNode = root;
 
             while(currentNode){
@@ -50,34 +50,36 @@ class Rope{
                 //to maintain currentNode to be non-null when reached to a leaf node,
                 //currentNode is assigned to its parent's right child
                 if(currentNode->lChild == nullptr && currentNode->rChild == nullptr){
-                    ropeStringsVector.push_back(currentNode->childNodeString);
+                    ropeStringsVector.push_back(currentNode);
                     currentNode = ropeNodeStack.top()->rChild; //left child's sibling
                     ropeNodeStack.pop();
-        
+    
                 //traverse root until left most child is reached
                 }else{
                     ropeNodeStack.push(currentNode);
                     currentNode = currentNode->lChild;
                 }
             }
-
             return ropeStringsVector;
         }
-
-
-
 };
 
-//interface: RopeNode* insertRopeString(int index, string str)
-//implementation: do one split and concat
+//interface: 
+//  RopeNode* insertRopeString(int index, string str)
+//implementation: 
+//  do one split and concat
 
-//interface: RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot)
+//interface: 
+//  RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot)
+//implementation: 
+//  create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot,
+//  also the weight of this new node should be the summed weights of the left subtree's leafs
+//  tree my need rebalacing after this opperation
 
-//implementation: create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot
-//                also the 
-
-//interface: RopeNode* splitRopeAtIndex(int index, RopeNode* RopeRoot)
+//interface: 
+//  RopeNode* splitRopeAtIndex(int index, RopeNode* RopeRoot)
 //implementation:
+//  
 
 //interface:
 //implementation:
