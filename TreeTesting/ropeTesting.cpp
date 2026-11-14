@@ -62,28 +62,56 @@ class Rope{
             }
             return ropeStringsVector;
         }
+        //interface: 
+        //  RopeNode* insertRopeString(int index, string str)
+        //implementation: 
+        //  do one split and concat
+
+        //interface: 
+        //  RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot)
+        //implementation: 
+        //  create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot,
+        //  also the weight of this new node should be the summed weights of the left subtree's leafs
+        //  tree my need rebalacing after this opperation
+
+        //interface: 
+        //  RopeNode* splitRopeAtIndex(int index, RopeNode* RopeRoot)
+        //implementation:
+        //  
+
+        //interface: the index of the char in string, 
+        //           it is zero indexed so index 1 returns the second character
+        char getCharacterAtIndex(int charIndex, RopeNode* currentRopeNode){            
+            
+            //in case we have less characters than passed charIndex
+            if(currentRopeNode == nullptr){
+                return NULL;
+            } 
+
+            //  go to left child if index is less than node weight 
+            //since that node index must reside at left side of the tree 
+            if(charIndex < currentRopeNode->nodeWeight){
+                if(currentRopeNode->lChild == nullptr){
+                    return currentRopeNode->childNodeString[charIndex];
+                }else{
+                    return getCharacterAtIndex(charIndex, currentRopeNode->lChild);
+                }
+                
+            //we must go right even when it is equal to current weight because of the zero-indexed string
+            }else{
+                return getCharacterAtIndex(charIndex - currentRopeNode->nodeWeight, currentRopeNode->rChild);
+            }
+        }
+            
+        //implementation: 
+        /*  if weight of the node is greater than the index and there is a left child go to left child, 
+            if there is no left child then return the char indexed by the string at the current node like 
+            this str[index]. If index is greater than node's weight, substract weight from index anand go 
+            to right child*/
+
+
+        
 };
-
-//interface: 
-//  RopeNode* insertRopeString(int index, string str)
-//implementation: 
-//  do one split and concat
-
-//interface: 
-//  RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot)
-//implementation: 
-//  create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot,
-//  also the weight of this new node should be the summed weights of the left subtree's leafs
-//  tree my need rebalacing after this opperation
-
-//interface: 
-//  RopeNode* splitRopeAtIndex(int index, RopeNode* RopeRoot)
-//implementation:
-//  
-
-//interface:
-//implementation:
-
 /*
     -------------To do----------------
     build a working rope data structer, it must:
