@@ -131,12 +131,13 @@ class Rope{
 
             vector<RopeNode*> leafVector = collectRopeLeaf(ropeRoot);
 
-            bool atLeftSubTree = true;  // atLeftSubTree is true if we are left of the node we are spliting from
-                                        // becomes false after we encouter the leaf node
+            bool atLeftLeaf= true;  // atLeftLeaf is true if we are left of the node we are spliting from
+                                    // becomes false after we encouter the leaf node
             for (RopeNode* v: leafVector){
-                if(v==rLeafSplit) atLeftSubTree = false;
+                //here the case where the node doesn't split haven't been tackled
+                if(v==rLeafSplit) atLeftLeaf = false;
 
-                if(atLeftSubTree){
+                if(atLeftLeaf){
                     //make left tree by vector
                 }else{
 
@@ -153,11 +154,14 @@ class Rope{
         char getCharacterAtIndex(int charIndex, RopeNode* currentRopeNode){
             
             RopeNode* p = getLeafAtIndex(charIndex, currentRopeNode);
+            //get leaf at index changes the charIndex so passing it here should 
+            //indicate the proper index of the leaf's string
             return p->childNodeString[charIndex];
         }
-
+       
         //interface: gives the node that has the charater at charIndex, 
         //           this method changes charIndex after being called
+        //           and is zero-indexed
         RopeNode* getLeafAtIndex(int& charIndex, RopeNode* currentRopeNode){
             //implementation: 
                 /*  if weight of the node is greater than the index and there is a left child go to left child, 
