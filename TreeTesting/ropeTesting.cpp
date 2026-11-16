@@ -88,12 +88,62 @@ class Rope{
 
 
         //interface: 
-        //  RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot)
+        RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot){
+
         //implementation: 
         //  create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot,
         //  also the weight of this new node should be the summed weights of the left subtree's leafs
-        //  tree my need rebalacing after this opperation
+        //  tree might need rebalacing after this opperation
+            
+            vector<RopeNode*> leftLeaves = collectRopeLeaf(lRopeRoot);
+            int leftLeafWeights = 0;
 
+            for(RopeNode* v: leftLeaves){
+                leftLeafWeights += v->nodeWeight;
+            }
+
+            RopeNode* root = new RopeNode(NULL, leftLeafWeights, lRopeRoot, lRopeRoot);
+            
+            return root;
+        }
+
+        RopeNode* makeRopeFromVector(vector<RopeNode*> leavesVector){
+            //implementation:
+                //  while there is more than one leaf node in the leavesVector continue to concat 
+                //  we have to take two nodes each time and concat those then get a brand new 
+                // pair so we are not appending to the same root tree
+                //  two vectors should exist let v1 and v2, v1 has the leaves we are concatinating and v2 has the results we get from concatnation
+                //  then we treat the v1 as empty and start concatinating v2 and writing the results to v1
+                //  we should continue until either one has only one value after concatination
+                vector<RopeNode*> firstLeavesVector = leavesVector;
+                vector<RopeNode*> secondLeavesVector;
+                vector<RopeNode*> temp;
+
+                // we don't know if the total concatnation will be even or odd so we should check for both vectors
+                while(firstLeavesVector.size() != 1 && secondLeavesVector.size() != 1){
+                    
+                    if(!firstLeavesVector.empty()){
+                        temp = firstLeavesVector;
+                    }else{
+                        temp = secondLeavesVector;
+                    }
+
+                    for(int i = 0; i+1 < temp.size() ; i++){
+                        //every turn we want to write to the other vector
+                        if(!firstLeavesVector.empty()){
+                            secondLeavesVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                        }else{
+                            firstLeavesVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                        }
+                    }
+
+                    if(temp == firstLeavesVector){
+                        firstLeavesVector.clear();
+                    }else{
+                        secondLeavesVector.clear();
+                    }
+                }
+        }
 
 
 
