@@ -27,6 +27,7 @@ class RopeNode{
         RopeNode():childNodeString(NULL), nodeWeight(NULL), lChild(nullptr), rChild(nullptr){};
         RopeNode(string s, int nW):childNodeString(s), nodeWeight(nW), lChild(nullptr), rChild(nullptr){};
         RopeNode(string s, int nW, RopeNode* ln, RopeNode* rn): childNodeString(s), nodeWeight(nW), lChild(ln), rChild(rn){}
+
 };
 
 class Rope{
@@ -79,7 +80,10 @@ class Rope{
         //  do one split and concat
 
 
-
+        //interface:
+        //  RopeNode* createTreeFromVector
+        //implementation:
+        //  concat until the vector only has 1 element
 
 
 
@@ -112,15 +116,12 @@ class Rope{
         //      after hitting that node start creating a new tree iterate until vector is finsihed 
         //      rebalance the tree
 
-            
             RopeNode* leafToSplit = getLeafAtIndex(index, ropeRoot);
             RopeNode* lLeafSplit = nullptr;
             RopeNode* rLeafSplit = nullptr;
 
             //at this point index should be altered as the corresponding node's char index by getLeafAtIndex
             if(leafToSplit->childNodeString.length() != index+1){
-
-                
 
                 string leftString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
                 string rightString = (leafToSplit->childNodeString).substr(index); //second half, including index
@@ -144,10 +145,11 @@ class Rope{
                                     // becomes false after we encouter the leaf node
             for (RopeNode* v: leafVector){
                 //here the case where the node doesn't split haven't been tackled
-                if(v==rLeafSplit) atLeftLeaf = false;
+                if(v == rLeafSplit || v == leafToSplit) atLeftLeaf = false;
 
                 if(atLeftLeaf){
-                    //make left tree by vector
+                    //write a funciton to make/add node provided a root
+
                 }else{
 
                 }
