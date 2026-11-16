@@ -71,7 +71,10 @@ class Rope{
         }
         
 
-
+        //interface:
+        // void printRope(RopeNode* root)
+        //implemenation
+        // https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/
 
 
         //interface: 
