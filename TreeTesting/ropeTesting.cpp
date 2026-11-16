@@ -23,6 +23,10 @@ class RopeNode{
         int nodeWeight;
         RopeNode* lChild;
         RopeNode* rChild;
+
+        RopeNode():childNodeString(NULL), nodeWeight(NULL), lChild(nullptr), rChild(nullptr){};
+        RopeNode(string s, int nW):childNodeString(s), nodeWeight(nW), lChild(nullptr), rChild(nullptr){};
+        RopeNode(string s, int nW, RopeNode* ln, RopeNode* rn): childNodeString(s), nodeWeight(nW), lChild(ln), rChild(rn){}
 };
 
 class Rope{
@@ -91,7 +95,7 @@ class Rope{
 
 
 
-        //interface: 
+        //interface: split the tree from corrseponding index, that index resides in the new left subtree
         RopeNode* splitRopeAtIndex(int index, RopeNode* ropeRoot){
         //implementation: 
         //  there are two cases to tackle:
@@ -113,13 +117,18 @@ class Rope{
             RopeNode* lLeafSplit = nullptr;
             RopeNode* rLeafSplit = nullptr;
 
-            //at this point index should be altered as the corresponding char's index by getLeafAtIndex
-            if(leafToSplit->childNodeString.length() != index){
+            //at this point index should be altered as the corresponding node's char index by getLeafAtIndex
+            if(leafToSplit->childNodeString.length() != index+1){
 
-                lLeafSplit->childNodeString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
-                rLeafSplit->childNodeString = (leafToSplit->childNodeString).substr(index); //second half, including index
+                
 
+                string leftString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
+                string rightString = (leafToSplit->childNodeString).substr(index); //second half, including index
                 leafToSplit->childNodeString = nullptr;
+
+                lLeafSplit = new RopeNode(leftString, leftString.length());
+                rLeafSplit = new RopeNode(rightString, rightString.length());
+
                 leafToSplit->nodeWeight = lLeafSplit->childNodeString.length();
                 leafToSplit->lChild = lLeafSplit;
                 leafToSplit->rChild = rLeafSplit;
@@ -131,7 +140,7 @@ class Rope{
 
             vector<RopeNode*> leafVector = collectRopeLeaf(ropeRoot);
 
-            bool atLeftLeaf= true;  // atLeftLeaf is true if we are left of the node we are spliting from
+            bool atLeftLeaf = true; // atLeftLeaf is true if we are left of the node we are spliting from
                                     // becomes false after we encouter the leaf node
             for (RopeNode* v: leafVector){
                 //here the case where the node doesn't split haven't been tackled
@@ -163,7 +172,7 @@ class Rope{
         //           this method changes charIndex after being called
         //           and is zero-indexed
         RopeNode* getLeafAtIndex(int& charIndex, RopeNode* currentRopeNode){
-            //implementation: 
+            //implementation:
                 /*  if weight of the node is greater than the index and there is a left child go to left child, 
                 if there is no left child then return the object that has that index. If index is greater than 
                 node's weight, substract weight from index and go to right child*/
