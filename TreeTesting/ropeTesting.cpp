@@ -73,6 +73,18 @@ class Rope{
         }
         
         //interface:
+        void printRopeLeaf(RopeNode* root){
+            vector<RopeNode*> leafs =  collectRopeLeaf(root);
+            for(RopeNode* l: leafs){
+                cout<<"("<<l->childNodeString<<")";
+            }
+        }
+        //implamentation:
+        //  collect leafs then print every leafs string
+
+
+
+        //interface:
         // void printRope(RopeNode* root)
         //implemenation
         // https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/
@@ -85,20 +97,27 @@ class Rope{
             // should ropeNode return two roots or split leaf nodes? advatage of 
             // returining two leaf node vectors is that I dont have to refind the leafs,
             // but returning two vector this way might be not intuitive
-            pair<vector<RopeNode*>, vector<RopeNode*>> splitRope =  splitRopeAtIndex(index, ropeRoot);
-
-            RopeNode* insertNode = new RopeNode(str, str.length());
-
-            splitRope.first.push_back(insertNode); // append new entry to left tree
-
-            splitRope.first.insert(splitRope.first.end(), splitRope.second.begin(), splitRope.second.end());  // merge two trees
-
-            //idk if this is the best way
-
-            RopeNode* root = makeRopeFromVector(splitRope.first);
             
-            return root;
-        }
+            //testing if resolving the nullptr here solves the problem for splitROpeAtIndex seg fault
+            if(ropeRoot == nullptr){
+                ropeRoot = new RopeNode(str, str.length());
+                return ropeRoot;
+            }else{
+                pair<vector<RopeNode*>, vector<RopeNode*>> splitRope = splitRopeAtIndex(index, ropeRoot);
+
+                RopeNode* insertNode = new RopeNode(str, str.length());
+
+                splitRope.first.push_back(insertNode); // append new entry to left tree
+
+                splitRope.first.insert(splitRope.first.end(), splitRope.second.begin(), splitRope.second.end());  // merge two trees
+
+                //idk if this is the best way
+
+                RopeNode* root = makeRopeFromVector(splitRope.first);
+                
+                return root;
+            }
+       }
 
         //interface: passed rope nodes could be leaf nodes or a branch nodes
         RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot){
@@ -195,11 +214,13 @@ class Rope{
             //      after hitting that node start creating a new tree iterate until vector is finsihed 
             //      rebalance the tree
 
+            //what to do whne this value is null?
             RopeNode* leafToSplit = getLeafAtIndex(index, ropeRoot);
             RopeNode* lLeafSplit = nullptr;
             RopeNode* rLeafSplit = nullptr;
 
             //at this point index should be altered as the corresponding node's char index by getLeafAtIndex
+
             if(leafToSplit->childNodeString.length() != index+1){
 
                 string leftString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
@@ -254,7 +275,7 @@ class Rope{
 
             //in case we have less characters than passed charIndex
             if(currentRopeNode == nullptr){
-                return NULL;
+                return nullptr;
             } 
 
             //  go to left child if index is less than node weight 
@@ -277,12 +298,18 @@ class Rope{
             RopeNode* insert(int index, string str){
                 root = insertRopeString(index, str, root);
                 return root;
-            }  
+            }
+
+            void print(){
+                printRopeLeaf(root);
+            }
+
     };
 
 int main(){
     Rope r;
     r.insert(0,"hello");
+    r.print();
 }
 /*
     -------------To do----------------
