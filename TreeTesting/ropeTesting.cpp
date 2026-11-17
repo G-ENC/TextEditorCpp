@@ -32,8 +32,8 @@ class RopeNode{
 
 class Rope{
     private:
-        RopeNode* root = nullptr;
-        
+       
+            //note: this funciton doesn't work
         //gets all the leaves from left to right and puts them in a vector
         vector<RopeNode*> collectRopeLeaf(RopeNode* root){
             /*
@@ -72,18 +72,16 @@ class Rope{
             return ropeStringsVector;
         }
         
-        //interface:
+        //interface: prints leafs left to right
         void printRopeLeaf(RopeNode* root){
-            vector<RopeNode*> leafs =  collectRopeLeaf(root);
+            //implamentation:
+            //  collect leafs then print every leafs string
+            vector<RopeNode*> leafs = collectRopeLeaf(root);
             for(RopeNode* l: leafs){
                 cout<<"("<<l->childNodeString<<")";
             }
         }
-        //implamentation:
-        //  collect leafs then print every leafs string
-
-
-
+        
         //interface:
         // void printRope(RopeNode* root)
         //implemenation
@@ -94,14 +92,15 @@ class Rope{
             //implementation: 
             //  do one split and concat
 
-            // should ropeNode return two roots or split leaf nodes? advatage of 
+            // should splitRopeAtIndex return two roots or leaf nodes? advatage of 
             // returining two leaf node vectors is that I dont have to refind the leafs,
             // but returning two vector this way might be not intuitive
             
-            //testing if resolving the nullptr here solves the problem for splitROpeAtIndex seg fault
+            //testing if resolving the nullptr here solves the problem for splitRopeAtIndex seg fault
             if(ropeRoot == nullptr){
                 ropeRoot = new RopeNode(str, str.length());
                 return ropeRoot;
+
             }else{
                 pair<vector<RopeNode*>, vector<RopeNode*>> splitRope = splitRopeAtIndex(index, ropeRoot);
 
@@ -112,7 +111,6 @@ class Rope{
                 splitRope.first.insert(splitRope.first.end(), splitRope.second.begin(), splitRope.second.end());  // merge two trees
 
                 //idk if this is the best way
-
                 RopeNode* root = makeRopeFromVector(splitRope.first);
                 
                 return root;
@@ -295,6 +293,8 @@ class Rope{
         }
 
         public:
+            RopeNode* root = nullptr;
+
             RopeNode* insert(int index, string str){
                 root = insertRopeString(index, str, root);
                 return root;
@@ -308,8 +308,14 @@ class Rope{
 
 int main(){
     Rope r;
-    r.insert(0,"hello");
-    r.print();
+
+    string str = "chud";
+
+    r.root = new RopeNode("", str.length(),nullptr, nullptr);    
+    r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
+    r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
+
+    // r.print();
 }
 /*
     -------------To do----------------
