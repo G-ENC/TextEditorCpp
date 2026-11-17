@@ -58,8 +58,10 @@ class Rope{
                 //currentNode is assigned to its parent's right child
                 if(currentNode->lChild == nullptr && currentNode->rChild == nullptr){
                     ropeStringsVector.push_back(currentNode);
-                    currentNode = ropeNodeStack.top()->rChild; //left child's sibling
-                    ropeNodeStack.pop();
+                    if(!ropeNodeStack.empty()){ //when the leaf node is passed as root, there might not be elements in stack
+                        currentNode = ropeNodeStack.top()->rChild; //left child's sibling
+                        ropeNodeStack.pop();
+                    }
     
                 //traverse root until left most child is reached
                 }else{
@@ -90,7 +92,7 @@ class Rope{
 
 
 
-        //interface: 
+        //interface: passed rope nodes could be leaf nodes or a branch nodes
         RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot){
 
         //implementation: 
@@ -105,52 +107,65 @@ class Rope{
                 leftLeafWeights += v->nodeWeight;
             }
 
-            RopeNode* root = new RopeNode(NULL, leftLeafWeights, lRopeRoot, lRopeRoot);
+            RopeNode* root = new RopeNode(NULL, leftLeafWeights, lRopeRoot, rRopeRoot);
             
             return root;
         }
 
+        //interface: passed vector should be all leaf nodes, if not tree might need rebalancing
         RopeNode* makeRopeFromVector(vector<RopeNode*> leavesVector){
             //implementation:
-                //  while there is more than one leaf node in the leavesVector continue to concat 
+                //  while there is more than one node in fisrtNodeVecor or secondNodeVector continue to concat 
+
                 //  we have to take two nodes each time and concat those then get a brand new 
-                // pair so we are not appending to the same root tree
-                //  two vectors should exist let v1 and v2, v1 has the leaves we are concatinating and v2 has the results we get from concatnation
-                //  then we treat the v1 as empty and start concatinating v2 and writing the results to v1
-                //  we should continue until either one has only one value after concatination
-                vector<RopeNode*> firstLeavesVector = leavesVector;
-                vector<RopeNode*> secondLeavesVector;
+                //  pair so we are not appending to the same root tree
+
+                //  two vectors should exist let v1 and v2, v1 has the inital leaves we are concatinating 
+                //  and v2 has the results we get from concatnation
+                
+                //  then we treat v1 as empty and start concatinating v2 and writing the results to v1
+                
+                //  we should continue until either one has only one node after concatination
+                vector<RopeNode*> firstNodeVector = leavesVector;
+                vector<RopeNode*> secondNodeVector;
                 vector<RopeNode*> temp;
 
                 // we don't know if the total concatnation will be even or odd so we should check for both vectors
-                while(firstLeavesVector.size() != 1 && secondLeavesVector.size() != 1){
+                while(firstNodeVector.size() != 1 && secondNodeVector.size() != 1){
                     
-                    if(!firstLeavesVector.empty()){
-                        temp = firstLeavesVector;
+                    if(!firstNodeVector.empty()){
+                        temp = firstNodeVector;
                     }else{
-                        temp = secondLeavesVector;
+                        temp = secondNodeVector;
                     }
 
-                    for(int i = 0; i+1 < temp.size() ; i++){
-                        //every turn we want to write to the other vector
-                        if(!firstLeavesVector.empty()){
-                            secondLeavesVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                    for(int i = 0; i+1 < temp.size() ; i+=2){ //get a brand new pair of nodes by incrementing i by 2
+
+                        if(i+1 == temp.size() && temp.size()%2 == 1){ //when there is odd number of nodes final node cannot 
+                                                                      //be written, this part accommodates for that
+                            if(temp == firstNodeVector){
+                                secondNodeVector.push_back(temp[i]);
+                            }else{
+                                firstNodeVector.push_back(temp[i]);
+                            }
+
                         }else{
-                            firstLeavesVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                            if(temp == firstNodeVector){ //every turn we want to write to the other vector
+                                secondNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                            }else{
+                                firstNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                            }
                         }
+                        
                     }
 
-                    if(temp == firstLeavesVector){
-                        firstLeavesVector.clear();
+                    if(temp == firstNodeVector){
+                        firstNodeVector.clear();
                     }else{
-                        secondLeavesVector.clear();
+                        secondNodeVector.clear();
                     }
                 }
         }
-
-
-
-
 
         //interface: split the tree from corrseponding index, that index resides in the new left subtree
         RopeNode* splitRopeAtIndex(int index, RopeNode* ropeRoot){
@@ -196,6 +211,7 @@ class Rope{
 
             bool atLeftLeaf = true; // atLeftLeaf is true if we are left of the node we are spliting from
                                     // becomes false after we encouter the leaf node
+
             for (RopeNode* v: leafVector){
                 //here the case where the node doesn't split haven't been tackled
                 if(v == rLeafSplit || v == leafToSplit) atLeftLeaf = false;
@@ -208,11 +224,6 @@ class Rope{
                 }
             }            
         }
-
-        //interface: RopeNode* constructRopeWithLeafs(RopeNode* leafNode, RopeNode* root)
-        //implementation: must update the weights of the tree (should correspond to left subtree length). could use stack and a list like colectLeaf. 
-        //Or recursion and find the weights level by level first the root --> collect leaves --> find lenght --> then the sub trees of it self --> until we hit a root
-
 
         //interface: gives the character at charIndex, this method is zero-indexed
         char getCharacterAtIndex(int charIndex, RopeNode* currentRopeNode){
