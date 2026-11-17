@@ -30,7 +30,7 @@ class RopeNode{
 
 };
 
-class Rope
+class Rope{
     private:
         RopeNode* root = nullptr;
         
@@ -79,18 +79,35 @@ class Rope
 
 
         //interface: 
-        //  RopeNode* insertRopeString(int index, string str)
-        //implementation: 
-        //  do one split and concat
+        RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
+            //implementation: 
+            //  do one split and concat
 
+            // should ropeNode return two roots or split leaf nodes? advatage of 
+            // returining two leaf node vectors is that I dont have to refind the leafs,
+            // but returning two vector this way might be not intuitive
+            pair<vector<RopeNode*>, vector<RopeNode*>> splitRope =  splitRopeAtIndex(index, ropeRoot);
+
+            RopeNode* insertNode = new RopeNode(str, str.length());
+
+            splitRope.first.push_back(insertNode); // append new entry to left tree
+
+            splitRope.first.insert(splitRope.first.end(), splitRope.second.begin(), splitRope.second.end());  // merge two trees
+
+            //idk if this is the best way
+
+            RopeNode* root = makeRopeFromVector(splitRope.first);
+            
+            return root;
+        }
 
         //interface: passed rope nodes could be leaf nodes or a branch nodes
         RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot){
 
-        //implementation: 
-        //  create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot,
-        //  also the weight of this new node should be the summed weights of the left subtree's leafs
-        //  tree might need rebalacing after this opperation
+            //implementation: 
+            //  create a new RopeRoot and set the left child as lRopeRoot and right child as rRopeRoot,
+            //  also the weight of this new node should be the summed weights of the left subtree's leafs
+            //  tree might need rebalacing after this opperation
             
             vector<RopeNode*> leftLeaves = collectRopeLeaf(lRopeRoot);
             int leftLeafWeights = 0;
@@ -161,21 +178,22 @@ class Rope
 
         //this method isnt finished
         //interface: split the tree from corrseponding index, that index resides in the new left subtree
-        RopeNode* splitRopeAtIndex(int index, RopeNode* ropeRoot){
-        //implementation: 
-        //  there are two cases to tackle:
-        //      case1: provided index is at the last index of the string 
-        //      case2: provided index is between the string
-        //  
-        //  to reduce the ricky second case we have to split that node, at the index, into two new nodes.
-        //  after that we get that leaf node and all the leaf nodes right of it then create a new tree with those nodes, 
-        //  also get all the leaf nodes left of that node then again create a new tree.
-        //  
-        //  steps:
-        //      reduce the problem to case 1
-        //      call collectLeafNodes, and iterate the list and create a Rope until we hit the node we got from calling getLeafAtIndex
-        //      after hitting that node start creating a new tree iterate until vector is finsihed 
-        //      rebalance the tree
+        //            returns a pair<leafs of left tree, leafs of right tree>
+        pair<vector<RopeNode*>, vector<RopeNode*>> splitRopeAtIndex(int index, RopeNode* ropeRoot){
+            //implementation: 
+            //  there are two cases to tackle:
+            //      case1: provided index is at the last index of the string 
+            //      case2: provided index is between the string
+            //  
+            //  to reduce the ricky second case we have to split that node, at the index, into two new nodes.
+            //  after that we get that leaf node and all the leaf nodes right of it then create a new tree with those nodes, 
+            //  also get all the leaf nodes left of that node then again create a new tree.
+            //  
+            //  steps:
+            //      reduce the problem to case 1
+            //      call collectLeafNodes, and iterate the list and create a Rope until we hit the node we got from calling getLeafAtIndex
+            //      after hitting that node start creating a new tree iterate until vector is finsihed 
+            //      rebalance the tree
 
             RopeNode* leafToSplit = getLeafAtIndex(index, ropeRoot);
             RopeNode* lLeafSplit = nullptr;
@@ -205,17 +223,16 @@ class Rope
             bool atLeftLeaf = true; // atLeftLeaf is true if we are left of the node we are spliting from
                                     // becomes false after we encouter the leaf node
 
-            for (RopeNode* v: leafVector){
-                //here the case where the node doesn't split haven't been tackled
+            vector<RopeNode*> leftLeaves;
+            vector<RopeNode*> rightLeaves;
+            
+            for (RopeNode* v: leafVector){// getting the left leaves and right leaves
                 if(v == rLeafSplit || v == leafToSplit) atLeftLeaf = false;
+                atLeftLeaf == true ? leftLeaves.push_back(v) : rightLeaves.push_back(v);
 
-                if(atLeftLeaf){
-                    //write a funciton to make/add node provided a root
+            }
 
-                }else{
-
-                }
-            }            
+            return make_pair(leftLeaves,rightLeaves);
         }
 
         //interface: gives the character at charIndex, this method is zero-indexed
@@ -255,7 +272,7 @@ class Rope
                 return getLeafAtIndex(charIndex, currentRopeNode->rChild);
             }
         }
-;
+};
 /*
     -------------To do----------------
     build a working rope data structer, it must:
