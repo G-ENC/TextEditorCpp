@@ -30,7 +30,7 @@ class RopeNode{
 
 };
 
-class Rope{
+class Rope
     private:
         RopeNode* root = nullptr;
         
@@ -72,7 +72,6 @@ class Rope{
             return ropeStringsVector;
         }
         
-
         //interface:
         // void printRope(RopeNode* root)
         //implemenation
@@ -83,13 +82,6 @@ class Rope{
         //  RopeNode* insertRopeString(int index, string str)
         //implementation: 
         //  do one split and concat
-
-
-        //interface:
-        //  RopeNode* createTreeFromVector
-        //implementation:
-        //  concat until the vector only has 1 element
-
 
 
         //interface: passed rope nodes could be leaf nodes or a branch nodes
@@ -167,6 +159,7 @@ class Rope{
                 }
         }
 
+        //this method isnt finished
         //interface: split the tree from corrseponding index, that index resides in the new left subtree
         RopeNode* splitRopeAtIndex(int index, RopeNode* ropeRoot){
         //implementation: 
@@ -235,8 +228,7 @@ class Rope{
         }
        
         //interface: gives the node that has the charater at charIndex, 
-        //           this method changes charIndex after being called
-        //           and is zero-indexed
+        //           this method changes charIndex after being called and is zero-indexed
         RopeNode* getLeafAtIndex(int& charIndex, RopeNode* currentRopeNode){
             //implementation:
                 /*  if weight of the node is greater than the index and there is a left child go to left child, 
@@ -263,30 +255,21 @@ class Rope{
                 return getLeafAtIndex(charIndex, currentRopeNode->rChild);
             }
         }
-};
+;
 /*
     -------------To do----------------
     build a working rope data structer, it must:
-        collect leaves
+
         rebalance
         insert
-        index
-        concat 
-        cplit
+
+
+        split
         remove
         ? report
         printed in pretty way
 
     understand:
         what does it mean to balance a tree?
-        what is a rope is?
-
-        uniuon 
-        int,
-
-        struct{
-        int string
-        }
-        
 */
 
