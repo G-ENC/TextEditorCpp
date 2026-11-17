@@ -24,7 +24,7 @@ class RopeNode{
         RopeNode* lChild;
         RopeNode* rChild;
 
-        RopeNode():childNodeString(NULL), nodeWeight(NULL), lChild(nullptr), rChild(nullptr){};
+        RopeNode():childNodeString(""), nodeWeight(0), lChild(nullptr), rChild(nullptr){};
         RopeNode(string s, int nW):childNodeString(s), nodeWeight(nW), lChild(nullptr), rChild(nullptr){};
         RopeNode(string s, int nW, RopeNode* ln, RopeNode* rn): childNodeString(s), nodeWeight(nW), lChild(ln), rChild(rn){}
 
@@ -77,7 +77,6 @@ class Rope{
         //implemenation
         // https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/
 
-
         //interface: 
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
             //implementation: 
@@ -116,8 +115,7 @@ class Rope{
                 leftLeafWeights += v->nodeWeight;
             }
 
-            RopeNode* root = new RopeNode(NULL, leftLeafWeights, lRopeRoot, rRopeRoot);
-            
+            RopeNode* root = new RopeNode("", leftLeafWeights, lRopeRoot, rRopeRoot);
             return root;
         }
 
@@ -174,6 +172,8 @@ class Rope{
                         secondNodeVector.clear();
                     }
                 }
+                
+                return firstNodeVector.size() == 1 ? firstNodeVector[0] : secondNodeVector[0];
         }
 
         //this method isnt finished
@@ -204,7 +204,7 @@ class Rope{
 
                 string leftString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
                 string rightString = (leafToSplit->childNodeString).substr(index); //second half, including index
-                leafToSplit->childNodeString = nullptr;
+                leafToSplit->childNodeString = "";
 
                 lLeafSplit = new RopeNode(leftString, leftString.length());
                 rLeafSplit = new RopeNode(rightString, rightString.length());
@@ -272,21 +272,31 @@ class Rope{
                 return getLeafAtIndex(charIndex, currentRopeNode->rChild);
             }
         }
-};
+
+        public:
+            RopeNode* insert(int index, string str){
+                root = insertRopeString(index, str, root);
+                return root;
+            }  
+    };
+
+int main(){
+    Rope r;
+    r.insert(0,"hello");
+}
 /*
     -------------To do----------------
     build a working rope data structer, it must:
 
         rebalance
-        insert
 
-
-        split
         remove
         ? report
         printed in pretty way
 
     understand:
         what does it mean to balance a tree?
+
+    write public methods to use the rope and find the bugs in the code
 */
 
