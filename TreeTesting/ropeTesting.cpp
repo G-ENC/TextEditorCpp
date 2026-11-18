@@ -321,9 +321,16 @@ int main(){
     r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
     r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
 
+
+    r.insertString(0,"chud");
+
     r.printRope();
 
-    r.insertString(2, "123456");
+    r.insertString(2, "chud");
+
+    r.printRope();
+
+    r.insertString(2, "chud");
 
     r.printRope();
 
