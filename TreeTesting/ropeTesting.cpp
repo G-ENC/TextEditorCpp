@@ -33,7 +33,6 @@ class RopeNode{
 class Rope{
     private:
        
-            //note: this funciton doesn't work
         //gets all the leaves from left to right and puts them in a vector
         vector<RopeNode*> collectRopeLeaf(RopeNode* root){
 
@@ -83,6 +82,7 @@ class Rope{
             for(RopeNode* l: leafs){
                 cout<<"("<<l->childNodeString<<")";
             }
+            cout<<"\n";
         }
         
         //interface:
@@ -90,7 +90,7 @@ class Rope{
         //implemenation
         // https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/
 
-        //interface: 
+        //interface: given string is inserted in to the index within the whole string
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
             //implementation: 
             //  do one split and concat
@@ -315,8 +315,12 @@ int main(){
     string str = "chud";
 
     r.root = new RopeNode(str, str.length(),nullptr, nullptr);    
-    // r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
-    // r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
+    r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
+    r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
+
+    r.print();
+
+    r.insert(2, "chud");
 
     r.print();
 }
