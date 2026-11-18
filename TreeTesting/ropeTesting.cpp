@@ -90,6 +90,9 @@ class Rope{
         //implemenation
         // https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/
 
+
+        //bug: left of the string is lost after multiple inserts
+        //bug: inserting at index 0 creates new " () "
         //interface: given string is inserted in to the index within the whole string
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
             //implementation: 
@@ -298,12 +301,12 @@ class Rope{
         public:
             RopeNode* root = nullptr;
 
-            RopeNode* insert(int index, string str){
+            RopeNode* insertString(int index, string str){
                 root = insertRopeString(index, str, root);
                 return root;
             }
 
-            void print(){
+            void printRope(){
                 printRopeLeaf(root);
             }
 
@@ -318,11 +321,13 @@ int main(){
     r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
     r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
 
-    r.print();
+    r.printRope();
 
-    r.insert(2, "chud");
+    r.insertString(2, "123456");
 
-    r.print();
+    r.printRope();
+
+
 }
 /*
     -------------To do----------------
