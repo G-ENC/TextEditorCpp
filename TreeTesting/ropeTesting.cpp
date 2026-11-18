@@ -36,6 +36,7 @@ class Rope{
             //note: this funciton doesn't work
         //gets all the leaves from left to right and puts them in a vector
         vector<RopeNode*> collectRopeLeaf(RopeNode* root){
+
             /*
             implementation:
                 Tranverse the tree until hitting the left most leaf,
@@ -49,7 +50,7 @@ class Rope{
             */
 
             stack<RopeNode*> ropeNodeStack;
-            vector<RopeNode*> ropeStringsVector;
+            vector<RopeNode*> ropeLeafVector;
             RopeNode* currentNode = root;
 
             while(currentNode){
@@ -57,10 +58,12 @@ class Rope{
                 //to maintain currentNode to be non-null when reached to a leaf node,
                 //currentNode is assigned to its parent's right child
                 if(currentNode->lChild == nullptr && currentNode->rChild == nullptr){
-                    ropeStringsVector.push_back(currentNode);
+                    ropeLeafVector.push_back(currentNode);
                     if(!ropeNodeStack.empty()){ //when the leaf node is passed as root, there might not be elements in stack
                         currentNode = ropeNodeStack.top()->rChild; //left child's sibling
                         ropeNodeStack.pop();
+                    }else{
+                        currentNode = nullptr;
                     }
     
                 //traverse root until left most child is reached
@@ -69,7 +72,7 @@ class Rope{
                     currentNode = currentNode->lChild;
                 }
             }
-            return ropeStringsVector;
+            return ropeLeafVector;
         }
         
         //interface: prints leafs left to right
@@ -311,11 +314,11 @@ int main(){
 
     string str = "chud";
 
-    r.root = new RopeNode("", str.length(),nullptr, nullptr);    
-    r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
-    r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
+    r.root = new RopeNode(str, str.length(),nullptr, nullptr);    
+    // r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
+    // r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
 
-    // r.print();
+    r.print();
 }
 /*
     -------------To do----------------
