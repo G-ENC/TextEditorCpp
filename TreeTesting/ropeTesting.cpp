@@ -132,11 +132,10 @@ class Rope{
             //  also the weight of this new node should be the summed weights of the left subtree's leafs
             //  tree might need rebalacing after this opperation
             
-            vector<RopeNode*> leftLeaves = collectRopeLeaf(lRopeRoot);
+            vector<RopeNode*> leftLeaves = collectRopeLeaf(lRopeRoot); 
             int leftLeafWeights = 0;
-
             for(RopeNode* v: leftLeaves){
-                leftLeafWeights += v->nodeWeight;
+                leftLeafWeights += v->nodeWeight;   //find the weight of the node
             }
 
             RopeNode* root = new RopeNode("", leftLeafWeights, lRopeRoot, rRopeRoot);
@@ -147,7 +146,6 @@ class Rope{
         //passed vector should be all leaf nodes, if not tree might need rebalancing idk
         RopeNode* makeRopeFromVector(vector<RopeNode*> leavesVector){
             //implementation:
-                
                 
                 //  while there is more than one node in fisrtNodeVecor or secondNodeVector continue to concat 
 
@@ -166,8 +164,6 @@ class Rope{
 
                 // we don't know if the total concatnation will be even or odd so we should check for both vectors
                 while(firstNodeVector.size() != 1 && secondNodeVector.size() != 1){
-                    
-                   
 
                     if(!firstNodeVector.empty()){
                         temp = firstNodeVector;
@@ -175,17 +171,21 @@ class Rope{
                         temp = secondNodeVector;
                     }
 
-                    // for(RopeNode*v : firstNodeVector) cout<<"first vec:"<<v->childNodeString<<endl;
-                    // for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->childNodeString<<endl;
-                    // for(RopeNode*v : temp) cout<<"temp:"<<v->childNodeString<<endl;
+                    for(RopeNode*v : firstNodeVector) cout<<"first vec:"<<v->childNodeString<<endl;
+                    for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->childNodeString<<endl;
+                    for(RopeNode*v : temp) cout<<"temp:"<<v->childNodeString<<endl;
                     
                     for(int i = 0; i + 1 < temp.size() ; i += 2){ //get a brand new pair of nodes by incrementing i by 2
 
+                        //there is a bug here:
                         if(i + 3 == temp.size() && temp.size() % 2 == 1){ //when there is odd number of nodes final node cannot 
                                                                         //be written, this part accommodates for that
                         cout<<"inner loop: "<<temp[i+2]->childNodeString;
 
                             if(temp == firstNodeVector){//bug: nothing is being appended here
+                                    //should this be a conact(i dont think so) or a push_back,
+                                    //if the method be is push back then a second iteration must be done so that there is only one tree root at the end 
+                                    //so this shouldn't be in a if statement 
                                     secondNodeVector.push_back(temp[i+2]);
                                 }else{
                                     firstNodeVector.push_back(temp[i+2]);
