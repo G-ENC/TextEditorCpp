@@ -199,7 +199,8 @@ class Rope{
 
         //this method isnt finished
         //interface: split the tree from corrseponding index, that index resides in the new left subtree
-        //            returns a pair<leafs of left tree, leafs of right tree>
+        //           returns a pair<leafs of left tree, leafs of right tree>
+        //           this fucntion is 1 indexed
         pair<vector<RopeNode*>, vector<RopeNode*>> splitRopeAtIndex(int index, RopeNode* ropeRoot){
             //implementation: 
             //  there are two cases to tackle:
@@ -220,11 +221,12 @@ class Rope{
             RopeNode* lLeafSplit = nullptr;
             RopeNode* rLeafSplit = nullptr;
 
-            //at this point index should be altered as the corresponding node's char index by getLeafAtIndex
+            //at this point index should be altered as the corresponding node's char index, by getLeafAtIndex
 
-            if(leafToSplit->childNodeString.length() != index+1){
+            if(index != 0){ //case 2
 
                 string leftString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
+
                 string rightString = (leafToSplit->childNodeString).substr(index); //second half, including index
                 leafToSplit->childNodeString = "";
 
@@ -318,20 +320,23 @@ int main(){
     r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
     r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
 
+    //input:
+    // r.insertString(4,"chud");
+    // r.printRope();
+    //output:
+    // (chud)(chud)
 
-    r.insertString(0,"chud");
-
-    r.printRope();
-
-    r.insertString(2, "chud");
-
-    r.printRope();
-
-    r.insertString(2, "chud");
-
-    r.printRope();
-
-
+    //input:
+    // r.insertString(3,"chud");
+    // r.printRope();
+    // r.insertString(2,"chud");
+    // r.printRope();
+    // r.insertString(1,"chud");
+    // r.printRope();
+    //output:
+    // (chu)(chud)(d)(chud)
+    // (ch)(chud)(u)(chud)
+    // (c)(chud)(h)(chud)
 }
 /*
     -------------To do----------------
