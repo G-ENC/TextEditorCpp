@@ -2,6 +2,7 @@
 #include <stack>
 #include <vector>
 #include <string>
+#include <cassert>
 
 using namespace std;
 
@@ -33,6 +34,8 @@ class RopeNode{
 class Rope{
     private:
        
+        RopeNode* root = nullptr;
+
         //  returns all the leaves from left to right and puts them in a vector, 
         //this method doesn't use the weights of the nodes so it can be called even if the weights are wrong
         vector<RopeNode*> collectRopeLeaf(RopeNode* root){
@@ -85,15 +88,6 @@ class Rope{
             }
             cout<<"\n";
         }
-        
-        //interface:
-        // void printRope(RopeNode* root)
-        //implemenation
-        // https://andrewlock.net/creating-an-ascii-art-tree-in-csharp/
-
-
-        //bug: left of the string is lost after multiple inserts
-        //bug: inserting at index 0 creates new " () "
 
         //given sub-string is inserted into the index within the whole string
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
@@ -104,11 +98,9 @@ class Rope{
             // returining two leaf node vectors is that I dont have to refind the leafs,
             // but returning two vector this way might be not intuitive
             
-            //testing if resolving the nullptr here solves the problem for splitRopeAtIndex seg fault
             if(ropeRoot == nullptr){
                 ropeRoot = new RopeNode(str, str.length());
                 return ropeRoot;
-
             }else{
                 pair<vector<RopeNode*>, vector<RopeNode*>> splitRope = splitRopeAtIndex(index, ropeRoot);//split the tree into left and right tree from the index
                 RopeNode* insertNode = new RopeNode(str, str.length());
@@ -119,7 +111,6 @@ class Rope{
                 //idk if this is the best way
                 RopeNode* root = makeRopeFromVector(splitRope.first);
 
-                
                 return root;
             }
        }
@@ -142,7 +133,6 @@ class Rope{
             return root;
         }
 
-        //note: there might be a bug here or/and in concat
         //passed vector should be all leaf nodes, if not tree might need rebalancing idk
         RopeNode* makeRopeFromVector(vector<RopeNode*> leavesVector){
             //implementation:
@@ -171,10 +161,7 @@ class Rope{
                         temp = secondNodeVector;
                     }
 
-                    for(RopeNode*v : firstNodeVector) cout<<"first vec:"<<v->childNodeString<<endl;
-                    for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->childNodeString<<endl;
-                    for(RopeNode*v : temp) cout<<"temp:"<<v->childNodeString<<endl;
-                    
+                                        
                     for(int i = 0; i + 1 < temp.size() ; i += 2){ //get a brand new pair of nodes by incrementing i by 2
 
                         
@@ -183,6 +170,7 @@ class Rope{
                         }else{
                             firstNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
                         }
+                        
                         if(i + 3 == temp.size() && temp.size() % 2 == 1){ //when there is odd number of nodes final node cannot 
                                                                           //be written, this part accommodates for that
                             if(temp == firstNodeVector){
@@ -200,12 +188,6 @@ class Rope{
                     }else{
                         secondNodeVector.clear();
                     }
-                    // cout<<"~~~";
-                    // for(RopeNode*v : firstNodeVector) cout<<"first vec:"<<v->childNodeString<<endl;
-                    // for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->childNodeString<<endl;
-                    // for(RopeNode*v : temp) cout<<"temp:"<<v->childNodeString<<endl;
-
-                    cout<<"\n";
  
                 }
                 
@@ -216,6 +198,7 @@ class Rope{
         //           returns a pair<leafs of left tree, leafs of right tree>
         //           this fucntion is 1 indexed
         pair<vector<RopeNode*>, vector<RopeNode*>> splitRopeAtIndex(int index, RopeNode* ropeRoot){
+
             //implementation: 
             //  there are two cases to tackle:
             //      case1: provided index is at the last index of the string 
@@ -231,13 +214,17 @@ class Rope{
             //      return the leaf nodes of left (including the leaf at that index) and right in vector pairs
 
             //what to do when this value is null?
+            
             RopeNode* leafToSplit = getLeafAtIndex(index, ropeRoot);
             RopeNode* lLeafSplit = nullptr;
             RopeNode* rLeafSplit = nullptr;
 
+            //if the index is beyond the string's range leafToSplit is null, by getLeafAtIndex
+            // assert(leafToSplit);
+
             //at this point index should be altered as the corresponding node's char index, by getLeafAtIndex
 
-            if(index != 0){ //case 2
+            if(index != 0){ // case 2
                 string leftString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
 
                 string rightString = (leafToSplit->childNodeString).substr(index); //second half, including index
@@ -310,9 +297,9 @@ class Rope{
         }
 
         public:
-            RopeNode* root = nullptr;
 
             RopeNode* insertString(int index, string str){
+                
                 root = insertRopeString(index, str, root);
                 return root;
             }
@@ -326,29 +313,19 @@ class Rope{
 int main(){
     Rope r;
 
-    string str = "chud";
-
-    r.root = new RopeNode(str, str.length(),nullptr, nullptr);    
-    r.root->lChild = new RopeNode(str, str.length(), nullptr, nullptr);
-    r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
-
     //input:
-    r.insertString(4,"123");
+    r.insertString(0,"chud");
     r.printRope();
-    //output:
-    // (chud)(123)
-
-    //input:
-    // r.insertString(3,"chud");
-    // r.printRope();
-    // r.insertString(2,"chud");
-    // r.printRope();
-    // r.insertString(1,"chud");
-    // r.printRope();
-    //output:
-    // (chu)(chud)(d)(chud)
-    // (ch)(chud)(u)(chud)
-    // (c)(chud)(h)(chud)
+    r.insertString(3,"chud");
+    r.printRope();
+    r.insertString(5,"chud");
+    r.printRope();
+    r.insertString(5,"kasar");
+    r.printRope();
+    r.insertString(0,"123");
+    r.printRope();
+    r.insertString(0,"123");
+    r.printRope();
 }
 /*
     -------------To do----------------
@@ -358,11 +335,9 @@ int main(){
 
         remove
         ? report
-        printed in pretty way
 
     understand:
         what does it mean to balance a tree?
 
-    write public methods to use the rope and find the bugs in the code
 */
 
