@@ -296,6 +296,23 @@ class Rope{
             }
         }
 
+        //interface: startIndex and endIndex represent a selection by cursor
+        RopeNode* deleteNodesInRange(int firstIndex, int secondIndex, RopeNode* ropeRoot){
+
+            pair<vector<RopeNode*>, vector<RopeNode*>> firstTreeSplit = splitRopeAtIndex(firstIndex, ropeRoot);
+            vector<RopeNode*> leftSideOfSelect = firstTreeSplit.first; //get the left side of select
+            pair<vector<RopeNode*>, vector<RopeNode*>> secondTreeSplit = splitRopeAtIndex(secondIndex, ropeRoot);
+            vector<RopeNode*> rightSideOfSelect = secondTreeSplit.second; //get the right side of the select
+
+            //merge left and right tree leafs the 
+            //middle part are ommited thus deleting the selected part
+            leftSideOfSelect.insert(leftSideOfSelect.end(), rightSideOfSelect.begin(), rightSideOfSelect.end());  
+
+            return makeRopeFromVector(leftSideOfSelect);
+        }
+        //implementation:
+        //  split the rope at two index and concat 
+        
         public:
 
             RopeNode* insertString(int index, string str){
@@ -306,6 +323,12 @@ class Rope{
 
             void printRope(){
                 printRopeLeaf(root);
+            }
+
+            //deleting the wrong parts
+            RopeNode* deleteRange(int firstIndex, int secondIndex){
+                root = deleteNodesInRange(firstIndex, secondIndex, root);
+                return root;
             }
 
     };
@@ -320,11 +343,7 @@ int main(){
     r.printRope();
     r.insertString(5,"chud");
     r.printRope();
-    r.insertString(5,"kasar");
-    r.printRope();
-    r.insertString(0,"123");
-    r.printRope();
-    r.insertString(0,"123");
+    r.deleteRange(2,5);
     r.printRope();
 }
 /*
