@@ -177,29 +177,21 @@ class Rope{
                     
                     for(int i = 0; i + 1 < temp.size() ; i += 2){ //get a brand new pair of nodes by incrementing i by 2
 
-                        //there is a bug here:
-                        if(i + 3 == temp.size() && temp.size() % 2 == 1){ //when there is odd number of nodes final node cannot 
-                                                                        //be written, this part accommodates for that
-                        cout<<"inner loop: "<<temp[i+2]->childNodeString;
-
-                            if(temp == firstNodeVector){//bug: nothing is being appended here
-                                    //should this be a conact(i dont think so) or a push_back,
-                                    //if the method be is push back then a second iteration must be done so that there is only one tree root at the end 
-                                    //so this shouldn't be in a if statement 
-                                    secondNodeVector.push_back(temp[i+2]);
-                                }else{
-                                    firstNodeVector.push_back(temp[i+2]);
-                                }
-
+                        
+                        if(temp == firstNodeVector){ //every turn we want to write to the other vector
+                            secondNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
                         }else{
-                            if(temp == firstNodeVector){ //every turn we want to write to the other vector
-                                cout<<temp[i]->childNodeString<<" "<<temp[i+1]->childNodeString;
-                                secondNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
-                                for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->nodeWeight<<endl;
+                            firstNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                        }
+                        if(i + 3 == temp.size() && temp.size() % 2 == 1){ //when there is odd number of nodes final node cannot 
+                                                                          //be written, this part accommodates for that
+                            if(temp == firstNodeVector){
+                                    secondNodeVector.push_back(temp[i+2]);
                             }else{
-                                firstNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                                firstNodeVector.push_back(temp[i+2]);
                             }
                         }
+                
                         
                     }
 
@@ -212,6 +204,8 @@ class Rope{
                     // for(RopeNode*v : firstNodeVector) cout<<"first vec:"<<v->childNodeString<<endl;
                     // for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->childNodeString<<endl;
                     // for(RopeNode*v : temp) cout<<"temp:"<<v->childNodeString<<endl;
+
+                    cout<<"\n";
  
                 }
                 
