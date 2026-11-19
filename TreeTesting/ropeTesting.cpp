@@ -112,10 +112,13 @@ class Rope{
             }else{
                 pair<vector<RopeNode*>, vector<RopeNode*>> splitRope = splitRopeAtIndex(index, ropeRoot);//split the tree into left and right tree from the index
                 RopeNode* insertNode = new RopeNode(str, str.length());
+               
                 splitRope.first.push_back(insertNode); // append new entry to left tree
                 splitRope.first.insert(splitRope.first.end(), splitRope.second.begin(), splitRope.second.end());  // merge left and right tree leafs
+                
                 //idk if this is the best way
                 RopeNode* root = makeRopeFromVector(splitRope.first);
+
                 
                 return root;
             }
@@ -140,9 +143,12 @@ class Rope{
             return root;
         }
 
+        //note: there might be a bug here or/and in concat
         //passed vector should be all leaf nodes, if not tree might need rebalancing idk
         RopeNode* makeRopeFromVector(vector<RopeNode*> leavesVector){
             //implementation:
+                
+                
                 //  while there is more than one node in fisrtNodeVecor or secondNodeVector continue to concat 
 
                 //  we have to take two nodes each time and concat those then get a brand new 
@@ -161,25 +167,35 @@ class Rope{
                 // we don't know if the total concatnation will be even or odd so we should check for both vectors
                 while(firstNodeVector.size() != 1 && secondNodeVector.size() != 1){
                     
+                   
+
                     if(!firstNodeVector.empty()){
                         temp = firstNodeVector;
                     }else{
                         temp = secondNodeVector;
                     }
 
-                    for(int i = 0; i+1 < temp.size() ; i+=2){ //get a brand new pair of nodes by incrementing i by 2
+                    // for(RopeNode*v : firstNodeVector) cout<<"first vec:"<<v->childNodeString<<endl;
+                    // for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->childNodeString<<endl;
+                    // for(RopeNode*v : temp) cout<<"temp:"<<v->childNodeString<<endl;
+                    
+                    for(int i = 0; i + 1 < temp.size() ; i += 2){ //get a brand new pair of nodes by incrementing i by 2
 
-                        if(i+1 == temp.size() && temp.size()%2 == 1){ //when there is odd number of nodes final node cannot 
-                                                                      //be written, this part accommodates for that
-                            if(temp == firstNodeVector){
-                                secondNodeVector.push_back(temp[i]);
-                            }else{
-                                firstNodeVector.push_back(temp[i]);
-                            }
+                        if(i + 3 == temp.size() && temp.size() % 2 == 1){ //when there is odd number of nodes final node cannot 
+                                                                        //be written, this part accommodates for that
+                        cout<<"inner loop: "<<temp[i+2]->childNodeString;
+
+                            if(temp == firstNodeVector){//bug: nothing is being appended here
+                                    secondNodeVector.push_back(temp[i+2]);
+                                }else{
+                                    firstNodeVector.push_back(temp[i+2]);
+                                }
 
                         }else{
                             if(temp == firstNodeVector){ //every turn we want to write to the other vector
+                                cout<<temp[i]->childNodeString<<" "<<temp[i+1]->childNodeString;
                                 secondNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
+                                for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->nodeWeight<<endl;
                             }else{
                                 firstNodeVector.push_back(concatTwoRopes(temp[i], temp[i+1]));
                             }
@@ -192,12 +208,16 @@ class Rope{
                     }else{
                         secondNodeVector.clear();
                     }
+                    // cout<<"~~~";
+                    // for(RopeNode*v : firstNodeVector) cout<<"first vec:"<<v->childNodeString<<endl;
+                    // for(RopeNode*v : secondNodeVector) cout<<"second vec:"<<v->childNodeString<<endl;
+                    // for(RopeNode*v : temp) cout<<"temp:"<<v->childNodeString<<endl;
+ 
                 }
                 
                 return firstNodeVector.size() == 1 ? firstNodeVector[0] : secondNodeVector[0];
         }
 
-        //this method isnt finished
         //interface: split the tree from corrseponding index, that index resides in the new left subtree
         //           returns a pair<leafs of left tree, leafs of right tree>
         //           this fucntion is 1 indexed
@@ -224,7 +244,6 @@ class Rope{
             //at this point index should be altered as the corresponding node's char index, by getLeafAtIndex
 
             if(index != 0){ //case 2
-
                 string leftString = (leafToSplit->childNodeString).substr(0,index); //first half of the string not including the index
 
                 string rightString = (leafToSplit->childNodeString).substr(index); //second half, including index
@@ -250,10 +269,9 @@ class Rope{
             vector<RopeNode*> leftLeaves;
             vector<RopeNode*> rightLeaves;
             
-            for (RopeNode* v: leafVector){// getting the left leaves and right leaves
+            for (RopeNode* v: leafVector){  // getting the left leaves and right leaves
                 if(v == rLeafSplit || v == leafToSplit) atLeftLeaf = false;
                 atLeftLeaf == true ? leftLeaves.push_back(v) : rightLeaves.push_back(v);
-
             }
 
             return make_pair(leftLeaves,rightLeaves);
@@ -321,10 +339,10 @@ int main(){
     r.root->rChild = new RopeNode(str, str.length(), nullptr, nullptr); 
 
     //input:
-    // r.insertString(4,"chud");
-    // r.printRope();
+    r.insertString(4,"123");
+    r.printRope();
     //output:
-    // (chud)(chud)
+    // (chud)(123)
 
     //input:
     // r.insertString(3,"chud");
