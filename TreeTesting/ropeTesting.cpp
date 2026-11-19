@@ -33,7 +33,8 @@ class RopeNode{
 class Rope{
     private:
        
-        //gets all the leaves from left to right and puts them in a vector
+        //  returns all the leaves from left to right and puts them in a vector, 
+        //this method doesn't use the weights of the nodes so it can be called even if the weights are wrong
         vector<RopeNode*> collectRopeLeaf(RopeNode* root){
 
             /*
@@ -93,9 +94,10 @@ class Rope{
 
         //bug: left of the string is lost after multiple inserts
         //bug: inserting at index 0 creates new " () "
-        //interface: given string is inserted in to the index within the whole string
+
+        //given sub-string is inserted into the index within the whole string
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
-            //implementation: 
+            //implementation:
             //  do one split and concat
 
             // should splitRopeAtIndex return two roots or leaf nodes? advatage of 
@@ -108,14 +110,10 @@ class Rope{
                 return ropeRoot;
 
             }else{
-                pair<vector<RopeNode*>, vector<RopeNode*>> splitRope = splitRopeAtIndex(index, ropeRoot);
-
+                pair<vector<RopeNode*>, vector<RopeNode*>> splitRope = splitRopeAtIndex(index, ropeRoot);//split the tree into left and right tree from the index
                 RopeNode* insertNode = new RopeNode(str, str.length());
-
                 splitRope.first.push_back(insertNode); // append new entry to left tree
-
-                splitRope.first.insert(splitRope.first.end(), splitRope.second.begin(), splitRope.second.end());  // merge two trees
-
+                splitRope.first.insert(splitRope.first.end(), splitRope.second.begin(), splitRope.second.end());  // merge left and right tree leafs
                 //idk if this is the best way
                 RopeNode* root = makeRopeFromVector(splitRope.first);
                 
@@ -123,7 +121,7 @@ class Rope{
             }
        }
 
-        //interface: passed rope nodes could be leaf nodes or a branch nodes
+        //passed rope nodes can be leaf nodes or a branch nodes
         RopeNode* concatTwoRopes(RopeNode* lRopeRoot, RopeNode* rRopeRoot){
 
             //implementation: 
@@ -142,7 +140,7 @@ class Rope{
             return root;
         }
 
-        //interface: passed vector should be all leaf nodes, if not tree might need rebalancing
+        //passed vector should be all leaf nodes, if not tree might need rebalancing idk
         RopeNode* makeRopeFromVector(vector<RopeNode*> leavesVector){
             //implementation:
                 //  while there is more than one node in fisrtNodeVecor or secondNodeVector continue to concat 
@@ -208,17 +206,16 @@ class Rope{
             //      case1: provided index is at the last index of the string 
             //      case2: provided index is between the string
             //  
-            //  to reduce the ricky second case we have to split that node, at the index, into two new nodes.
+            //  to reduce the tricky second case we have to split that node, at the index, into two new nodes.
             //  after that we get that leaf node and all the leaf nodes right of it then create a new tree with those nodes, 
             //  also get all the leaf nodes left of that node then again create a new tree.
             //  
             //  steps:
             //      reduce the problem to case 1
-            //      call collectLeafNodes, and iterate the list and create a Rope until we hit the node we got from calling getLeafAtIndex
-            //      after hitting that node start creating a new tree iterate until vector is finsihed 
-            //      rebalance the tree
+            //      call collectLeafNodes, and iterate the vector and split the vector at the node we got from getLeafAtIndex
+            //      return the leaf nodes of left (including the leaf at that index) and right in vector pairs
 
-            //what to do whne this value is null?
+            //what to do when this value is null?
             RopeNode* leafToSplit = getLeafAtIndex(index, ropeRoot);
             RopeNode* lLeafSplit = nullptr;
             RopeNode* rLeafSplit = nullptr;
