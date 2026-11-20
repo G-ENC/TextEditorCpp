@@ -126,6 +126,15 @@ class Rope{
             cout<<"\n";
         }
 
+        //this method wrong:
+        //  merhod must return two roots,
+        //  method must only concat and merge the right side of the idnex
+        //  previous version found the left leaves and concated them which results in O(n) time
+        //  also when the split occures the leaves shouldn't be found only the splited ndoes which may or may not be leaves
+        //  this way the algo. is O(logn) but also requires a rebalance
+        pair<vector<RopeNode*>, vector<RopeNode*>> splitRopeAtIndex(int index, RopeNode* ropeRoot){
+        }
+
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
         }
 
@@ -136,9 +145,6 @@ class Rope{
 
         //passed vector should be all leaf nodes, if not tree might need rebalancing idk
         RopeNode* makeRopeFromVector(vector<RopeNode*> leavesVector){
-        }
-
-        pair<vector<RopeNode*>, vector<RopeNode*>> splitRopeAtIndex(int index, RopeNode* ropeRoot){
         }
 
         RopeNode* deleteNodesInRange(int firstIndex, int secondIndex, RopeNode* ropeRoot){
