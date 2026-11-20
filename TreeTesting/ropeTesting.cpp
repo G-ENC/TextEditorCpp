@@ -325,10 +325,10 @@ class Rope{
                 printRopeLeaf(root);
             }
 
-            RopeNode* deleteRange(int firstIndex, int secondIndex){
-                root = deleteNodesInRange(firstIndex, secondIndex, root);
-                return root;
-            }
+            // RopeNode* deleteRange(int firstIndex, int secondIndex){
+            //     root = deleteNodesInRange(firstIndex, secondIndex, root);
+            //     return root;
+            // }
 
     };
 
@@ -342,9 +342,7 @@ int main(){
     r.printRope();
     r.insertString(6,"789");
     r.printRope();
-    r.deleteRange(4,6);
-    r.printRope();
-    r.insertString(12,"123");
+
 }
 /*
     -------------To do----------------
