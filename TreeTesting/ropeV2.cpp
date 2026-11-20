@@ -127,24 +127,76 @@ class Rope{
         }
 
         //this method wrong:
-        //  merhod must return two roots,
+        //  method must return two roots,
         //  method must only concat and merge the right side of the idnex
         //  previous version found the left leaves and concated them which results in O(n) time
         //  also when the split occures the leaves shouldn't be found only the splited ndoes which may or may not be leaves
         //  this way the algo. is O(logn) but also requires a rebalance
         pair<RopeNode*, RopeNode*> splitRopeAtIndex(int index, RopeNode* ropeRoot){
             //implementation:
+                //  start finding the node if the index is larger go right and substract the weight from index if smaller go left
+                //  while traversing log each node in a stack
+                //  after finding the node if the index is somewhere between the leaf's string split that node and put the right leaf into a list
+                //                         if not put that leaf into a list
+
+                //  pop the elements of the stack for each pop brake the link betwen right subtree 
+                //  and add the node to the list
+                //  merge the list in to a new rope tree
+                //  rebalance what is remains of the left tree 
+
+            stack<RopeNode*> ropeNodeStack;
+            vector<RopeNode*> ropeNodeVector;
+            RopeNode* currentNode = ropeRoot;
+
+
+            // while(currentNode){
+
+            //     //to maintain currentNode to be non-null when reached to a leaf node,
+            //     //currentNode is assigned to its parent's right child
+            //     if(currentNode->lChild == nullptr && currentNode->rChild == nullptr){
+            //         ropeLeafVector.push_back(currentNode);
+            //         if(!ropeNodeStack.empty()){ //when the leaf node is passed as root, there might not be elements in stack
+            //             currentNode = ropeNodeStack.top()->rChild; //left child's sibling
+            //             ropeNodeStack.pop();
+            //         }else{
+            //             currentNode = nullptr;
+            //         }
+    
+            //     //traverse root until left most child is reached
+            //     }else{
+            //         ropeNodeStack.push(currentNode);
+            //         currentNode = currentNode->lChild;
+            //     }
+            // }
+            //     //go to left child if index is less than node weight 
+            //     //since that node index must reside at left side of the tree 
+            //     if(charIndex < currentRopeNode->nodeWeight){
+            //         if(currentRopeNode->lChild == nullptr){
+            //             return currentRopeNode;
+            //         }else{
+            //             return getLeafAtIndex(charIndex, currentRopeNode->lChild);
+            //         }
+
+            //     //we must go right even when it is equal to current weight because of the zero-indexed string
+            //     }else{
+            //         charIndex -= currentRopeNode->nodeWeight;
+            //         return getLeafAtIndex(charIndex, currentRopeNode->rChild);
+            //     }
+
+            while(! (currentNode->lChild && currentNode->rChild) ){//haven't hit a leaf node
                 
-                //  we have to substract the weight of the splited node form its parent nodes,
-                //  to traverse the backwards, we need a stack of nodes we have previously seen
-                //  this might be the least complicated way:
-                //      we try to find the node
-                //      while doing so we hold the nodes we have seen in a stack 
-                //      then after finding the node
-                //          either case 1 or 2
-                //      we put that node in a list
-                //      until the stack is empty we pop the node, brake the connection with right tree and add the node to the list (order is curcial)
-                //      then only concat the nodes in the list (which might be leaf but also root) this step, is the most expensive part of the function but it is still faster then concating all the leafs which was the case in previous iteration
+                if(index < currentNode->nodeWeight){
+                    currentNode = currentNode->lChild;
+                }else{
+                    index -= currentNode->nodeWeight;
+                    currentNode = currentNode->rChild;
+                }
+
+
+            }
+
+            
+            
         }
 
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
