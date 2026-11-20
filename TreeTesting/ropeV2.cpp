@@ -41,7 +41,7 @@ class Rope{
         vector<RopeNode*> collectRopeLeaf(RopeNode* root){
             /*
             implementation:
-               Tranverse the tree until hitting the left most leaf,
+                Tranverse the tree until hitting the left most leaf,
                 while doing this add each node to a stack excluding the leaf node.
 
                 After adding the leaf to a list, pop the element from the stack which
@@ -132,7 +132,19 @@ class Rope{
         //  previous version found the left leaves and concated them which results in O(n) time
         //  also when the split occures the leaves shouldn't be found only the splited ndoes which may or may not be leaves
         //  this way the algo. is O(logn) but also requires a rebalance
-        pair<vector<RopeNode*>, vector<RopeNode*>> splitRopeAtIndex(int index, RopeNode* ropeRoot){
+        pair<RopeNode*, RopeNode*> splitRopeAtIndex(int index, RopeNode* ropeRoot){
+            //implementation:
+                
+                //  we have to substract the weight of the splited node form its parent nodes,
+                //  to traverse the backwards, we need a stack of nodes we have previously seen
+                //  this might be the least complicated way:
+                //      we try to find the node
+                //      while doing so we hold the nodes we have seen in a stack 
+                //      then after finding the node
+                //          either case 1 or 2
+                //      we put that node in a list
+                //      until the stack is empty we pop the node, brake the connection with right tree and add the node to the list (order is curcial)
+                //      then only concat the nodes in the list (which might be leaf but also root) this step, is the most expensive part of the function but it is still faster then concating all the leafs which was the case in previous iteration
         }
 
         RopeNode* insertRopeString(int index, string str, RopeNode* ropeRoot){
