@@ -219,8 +219,7 @@ class Rope{
             RopeNode* lLeafSplit = nullptr;
             RopeNode* rLeafSplit = nullptr;
 
-            //if the index is beyond the string's range leafToSplit is null, by getLeafAtIndex
-            // assert(leafToSplit);
+            assert(leafToSplit);//the index is beyond the string's range leafToSplit is null, by getLeafAtIndex
 
             //at this point index should be altered as the corresponding node's char index, by getLeafAtIndex
 
@@ -297,6 +296,7 @@ class Rope{
         }
 
         //interface: startIndex and endIndex represent a selection by cursor
+        //           this funciton is 0 indexed and inclusive of the secondIndex
         RopeNode* deleteNodesInRange(int firstIndex, int secondIndex, RopeNode* ropeRoot){
 
             pair<vector<RopeNode*>, vector<RopeNode*>> firstTreeSplit = splitRopeAtIndex(firstIndex, ropeRoot);
@@ -325,7 +325,6 @@ class Rope{
                 printRopeLeaf(root);
             }
 
-            //deleting the wrong parts
             RopeNode* deleteRange(int firstIndex, int secondIndex){
                 root = deleteNodesInRange(firstIndex, secondIndex, root);
                 return root;
@@ -337,22 +336,21 @@ int main(){
     Rope r;
 
     //input:
-    r.insertString(0,"chud");
+    r.insertString(0,"123");
     r.printRope();
-    r.insertString(3,"chud");
+    r.insertString(3,"456");
     r.printRope();
-    r.insertString(5,"chud");
+    r.insertString(6,"789");
     r.printRope();
-    r.deleteRange(2,5);
+    r.deleteRange(4,6);
     r.printRope();
+    r.insertString(12,"123");
 }
 /*
     -------------To do----------------
     build a working rope data structer, it must:
 
         rebalance
-
-        remove
         ? report
 
     understand:
